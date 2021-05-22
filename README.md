@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# BUBBLE-track
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This interface was created with the following objectives:
+(1) to facilitate an easy and efficient process of checking and fine-tuning force-directed graphs
+(2) to act as a dashboard for monitoring the visual quality of a large number of force-directed graphs
 
 ## Available Scripts
 
