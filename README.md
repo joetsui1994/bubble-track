@@ -1,16 +1,16 @@
 # BUBBLE-track
 
 This interface was created with the following objectives:
-1. To facilitate an easy and efficient process of checking and fine-tuning force-directed graphs\
-2. To act as a dashboard for monitoring the visual quality of a large number of force-directed graphs
+1. To facilitate an easy and efficient process of checking and fine-tuning force-directed graphs.
+2. To act as a dashboard for monitoring the visual quality of a large number of force-directed graphs.
 
 ## What can it do with it?
 
 ### Graphs Visualisation
 
 To upload your own graph, click **(+) ADD GRAPH** located in the drawer on the left of the screen and a dialog will appear. Two possible ways of uploading your own graph is possible:
-1. Enter URL to download the desired graph (*to be implemented*)
-2. Upload graph in JSON format
+1. Enter URL to download the desired graph. (*to be implemented*)
+2. Upload graph in JSON format.
 
 A JSON file with customised parameter specifications can also be added (*optional*).\
 To see examples, go to (link).
