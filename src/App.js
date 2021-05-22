@@ -186,8 +186,8 @@ function App() {
   };
 
   const handleRemoveGraph = (graphID) => {
-    const newGraphs = graphs.filter(graph => graph.id !== graphID);
-    setGraphs(newGraphs);
+    const newGraphsArray = graphs.filter(graph => graph.id !== graphID);
+    setGraphs(newGraphsArray);
 
     if (currGraph !== null && currGraph.id === graphID) {
       setCurrGraph(null);
@@ -195,6 +195,11 @@ function App() {
   };
 
   const handleRetrieveGraph = (graph) => {
+    // remove QScores
+    graph = { ...graph, intersections: null, lenQ: null, potentialQ: null };
+    const newGraphsArray = graphs.map(g => g.id === graph.id ? graph : g);
+
+    setGraphs(newGraphsArray);
     _loadGraph(graph, 2000);
   };
 
