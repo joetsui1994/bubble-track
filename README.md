@@ -4,7 +4,7 @@ This interface was created with the following objectives:
 1. To facilitate an easy and efficient process of checking and fine-tuning force-directed graphs.
 2. To act as a dashboard for monitoring the visual quality of a large number of force-directed graphs.
 
-## What can it do with it?
+## What can you do with it?
 
 ### Graphs Visualisation
 
@@ -24,10 +24,22 @@ Once a graph has been uploaded and rendered successfully, a Graph-Card will appe
 
 ### Annealing
 
-Annealing (also a term borrowed from Physics) is a process by which the graph is "heated" to a higher temperature at which it is allowed to relax, before it is cooled to a hopefully more optimal configuration. Although it is generally unrealistic to expect a global minimum to be found, this method can help the graph escape from suboptimal local minima.
+Annealing (also a term borrowed from Physics) is a process in which the graph is "heated" to a higher temperature and then allowed to relax, before it is cooled to a hopefully more optimal configuration. Although it is generally unrealistic to expect the graph to settle to the global minimum, this method can help escape from suboptimal local minima and reduce the number of link-crossings.
 
 A number of parameters can be specified for the annealing process:
 
+`A-Decay` (Alpha-Decay) [0,1]: The alpha decay rate determines how quickly the current alpha interpolates towards the desired target alpha, or how quickly the simulation cools. A higher decay rate causes the simulation to cool more quickly and as a result increases the probability of being stuck in a local minimum; a lower decay rate leads to better convergence but takes longer to run. The default value for A-Decay is 0.03.
+
+`V-Decay` (Velocity-Decay) [0,1]: The velocity decay rate is akin to atmospheric friction or viscosity; after the application of any forces during a tick, each node's velocity is multiplied by (1 - *Velocity-Decay*). A higher velocity decay rate causes the nodes to cool less quickly and could result in suboptimal convergence if the simulation is halted prematurely; a lower velocity decay rate leads to faster convergence but risks numerical instabilities and oscillations. The default value for V-Decay is 0.1.
+
+`Min-A` (Minimum-Alpha) [0,1]: The simulation stops when the current alpha drops below the minimum alpha (**CAVEAT** technically the current alpha can only drop to Target-Alpha at which point the simulation continues running indefinitely if Minimum-Alpha is not reached, i.e. Target-Alpha is set to a value above Minimum-Alpha.) The default value for Min-A is 0.001.
+
+`H-Temp` (Heating-Temperature) [0,infty]: The heating-temperature determines the strength of mutual repulsion between nodes during the heating period of the annealing process. The default value for H-Temp is 5000.
+
+`H-Cutoff` (Heating-Cutoff) [Min-A,1]: The heating-cutoff determines the alpha value below which the graph is no longer "heated" to a higher temperature and is allowed to relax or cool to a stable configuration with a small strength of mutual repulsion between nodes. A lower heating-cutoff allows the graph to rearrange itself at a higher temperature for a longer duration, therefore often resulting in a better convergence once the graph is allowed to cool. The default value for H-Cutoff is 0.1.
+
 ### Parameters Tuning
 
-Testing
+The following parameters for rendering the final static configuration can be specified:
+
+`Min-R` (Minimum-Radius) [
