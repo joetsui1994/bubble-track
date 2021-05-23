@@ -9,11 +9,11 @@ This interface was created with the following objectives:
 ### Graphs Visualisation
 
 To upload your own graph, click **(+) ADD GRAPH** located in the drawer on the left of the screen and a dialog will appear. Two possible ways of uploading your own graph is possible:
-1. Enter URL to download the desired graph. (*to be implemented*)
-2. Upload graph in JSON format.
+1. Enter URL to download the desired graph from an external source. (*to be implemented*)
+2. Upload your own graph in JSON format.
 
-A JSON file with customised parameter specifications can also be added (*optional*).\
-To see examples, go to (link).
+A JSON file with customised parameter specifications can also be added (*see more details below*).\
+To see some examples, go to (link).
 
 ### Quality Control
 
@@ -40,6 +40,35 @@ A number of parameters can be specified for the annealing process:
 
 ### Parameters Tuning
 
-The following parameters for rendering the final static configuration can be specified:
+When uploading a new graph, there is the option to upload a corresponding JSON file containing specifications of the following parameters which are important for the final rendering of the static configuration.
 
-`Min-R` (Minimum-Radius) [
+`Min-R` (Minimum-Radius) [0Node-R,Max-R]: Minimum radius of non-SEQLESS nodes. The default value for Min-R is 7.
+
+`Max-R` (Maximum-Radius) [Min-R,infty]: Maximum radius of non-SEQLESS nodes. The default value for Max-R is 200.
+
+`0Node-R` (NonNode-Radius) [0,Min-R]: Radius of SEQLESS internal nodes. The default value for 0Node-R is 5.
+
+`Gamma` [0,infty]: Gamma determines the gradient of change of the radius between Min-R and Max-R as `num` increases. The default value for Gamma is 0.1.
+
+`Lambda` [0,infty]: Lambda determines the scaling between substitution-based branch length and rendered branch length. The default value for Lambda is 15000000.
+
+`Charge` [0,infty]: The charge determines the strength of mutual repulsion between nodes in the final relaxed configuration. The default value for Charge is 200.
+
+`Min-Z` [0,Max-Z]: Min-Z determines the furthest extent to which the graph can be zoomed out. The default value for Min-Z is 0.05.
+
+`Max-Z` [Min-Z, infty]: Max-Z determines the furthest extent to which the graph can be enlarged. The default value for Max-Z is 6.
+
+`x` (*centering*): x-coordinate of centering (important in final rendering)
+
+`y` (*centering*): y-coordinate of centering (important in final rendering)
+
+`Z-Scale` (*centering*): zoom-scale of centering (important in final rendering)
+
+### Additional Features
+
+- Once the simulation has settled to a desired state, you can export the coordinates of the final configuration as well as all relevant parameters specifications by clicking the **DOWNLOAD** button (leftmost icon) in the tool bar at the top of the interface.
+- The second icon in the tool bar (one resembling a crosshair) is a **COORDINATE-FINDER** button. Once activated, the graph is no longer manipulatable. Instead, any click event on the graph causes the xy-coordinate of the cursor's position and the zoom-scale to be printed in the display boxes on the left of the tool bar. This is useful for determining an appropriate centering position for the final render.
+- The fourth and fifth icons (starting from the left) are both centering buttons. The first button causes the graph to be centered at the position as specified by the centering parameters. The second button causes the graph to be centered at the center of mass of the graph, with the centering position calculated dynamically according to the current configuration.
+- Once the number of link-crossing and thus **INTERSECT-Q** has been computed, the positions of the intersections can be examined more closely using the left/right arrow icons. The zoom-scale for viewing these intersections can also be specified in Graph Parameters under the name `Int-Scale`.
+
+
