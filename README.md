@@ -40,4 +40,6 @@ A number of parameters can be specified for the annealing process:
 
 ### Parameters Tuning
 
+The following parameters for rendering the final static configuration can be specified:
 
+`Min-R` (Minimum-Radius) [
