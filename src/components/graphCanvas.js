@@ -9,7 +9,7 @@ const linkWidth = 1.3;
 //Calculate node radius given constants (min and max radii), scaling parameter and node value
 //Exponential scaling with parameter gamma, R(x) = maxR - (maxR - minR) * exp(gamma * value)
 function radiusCalc(minR, maxR, gamma, value) {
-    return maxR - (maxR - minR)*Math.exp(-gamma*value)
+    return maxR - (maxR - minR)*Math.exp(-gamma*(value - 1))
 }
 
 class HNetwork extends Component {
