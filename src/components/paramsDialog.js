@@ -217,7 +217,7 @@ export default function FormDialog(props) {
                     />
                 </FormControl>
                 <FormControl variant="outlined">
-                    <InputLabel className={classes.inputLabel}>0-Node R</InputLabel>
+                    <InputLabel className={classes.inputLabel}>0Node-R</InputLabel>
                     <OutlinedInput
                         margin='dense'
                         value={currentParams.nonNodeR}
