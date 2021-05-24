@@ -174,7 +174,7 @@ export default function FormDialog(props) {
 
     React.useEffect(() => {
         setParams(JSON.parse(JSON.stringify(params)));
-    }, [open]);
+    }, [open, params]);
 
     return (
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
