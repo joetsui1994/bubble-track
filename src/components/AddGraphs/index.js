@@ -15,16 +15,16 @@ import Divider from '@material-ui/core/Divider';
 import { validateFile, fileSizeDisplay } from './fileValidation';
 
 const defaultParams =  {
-    minR: 7,
+    minR: 15,
     maxR: 200,
     gamma: 0.1,
-    nonNodeR: 5,
+    nonNodeR: 8,
     lambda: 15000000,
     charge: 200,
     minZoom: 0.05,
     maxZoom: 6,
     alphaDecay: 0.03,
-    velocityDecay: 0.1,
+    velocityDecay: 0.2,
     minAlpha: 0.001,
     heatingCharge: 5000,
     heatingCutoff: 0.1,
@@ -106,6 +106,9 @@ const useStyles = makeStyles((theme) => ({
         },
         '&$disabled': {
             color: '#bfbfbf',
+        },
+        '&:hover': {
+            background: 'transparent'
         }
     },
     checked: {},
@@ -167,6 +170,7 @@ export default function FormDialog(props) {
     const [newGraphID, setNewGraphID] = React.useState('');
     const [nodesFixed, setNodesFixed] = React.useState(false);
     const [calculateQ, setCalculateQ] = React.useState(true);
+    const [addInvNodes, setAddInvNodes] = React.useState(false);
     const [waitingForFileUpload, setWaitingForFileUpload] = React.useState(false);
     const [helperMessage, setHelperMessage] = React.useState('N/A');
     const [helperMessageTimeout, setHelperMessageTimeout] = React.useState(null);
@@ -208,6 +212,10 @@ export default function FormDialog(props) {
 
     const handleCalculateQChange = () => {
         setCalculateQ(!calculateQ);
+    }
+
+    const handleAddInvNodes = () => {
+        setAddInvNodes(!addInvNodes);
     }
 
     const handleAdd = () => {
@@ -471,6 +479,20 @@ export default function FormDialog(props) {
                         disabled: classes.disabled,
                     }}
                     onChange={handleCalculateQChange}
+                />
+                <br />
+                <Typography className={classes.checkboxText}>
+                    Add invisible node(s) to links (<span style={{ fontStyle: 'italic' }}>experimental</span>):
+                </Typography>
+                <Checkbox
+                    disabled={nodesFixed}
+                    checked={!nodesFixed && addInvNodes}
+                    classes={{
+                        root: classes.checkbox,
+                        checked: classes.checked,
+                        disabled: classes.disabled,
+                    }}
+                    onChange={handleAddInvNodes}
                 />
                 <br />
                 <Typography className={classes.subTitle} style={{ marginTop: 10 }}>
