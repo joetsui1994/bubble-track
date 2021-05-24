@@ -275,7 +275,7 @@ export default function FormDialog(props) {
         } else {
             const mergedParams = { ...defaultParams, ...params };
 
-            return paramsCopy;
+            return mergedParams;
         }
     };
 
