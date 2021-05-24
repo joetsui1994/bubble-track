@@ -181,19 +181,6 @@ export default function FormDialog(props) {
         content: null,
     });
 
-    const _generateNewGraphID = () => {
-        const currIDs = graphs.map(graph => graph.id);
-        var currNum = currIDs.length + 1,
-            newID = `Untitled-Graph-${currNum}`;
-
-        while (currIDs.includes(newID)) {
-            currNum = currNum + 1;
-            newID = `Untitled-Graph-${currNum}`
-        }
-
-        return newID;
-    }
-
     const handleDialogClose = () => {
         handleClose();
         setNodesLinksUpload({
@@ -329,8 +316,17 @@ export default function FormDialog(props) {
     };
 
     useEffect(() => {
-        setNewGraphID(_generateNewGraphID());
-    }, [open]);
+        const currIDs = graphs.map(graph => graph.id);
+        var currNum = currIDs.length + 1,
+            newID = `Untitled-Graph-${currNum}`;
+
+        while (currIDs.includes(newID)) {
+            currNum = currNum + 1;
+            newID = `Untitled-Graph-${currNum}`
+        }
+
+        setNewGraphID(newID);
+    }, [open, graphs]);
 
     return (
         <Dialog open={open} onClose={handleDialogClose} aria-labelledby="form-dialog-title">
