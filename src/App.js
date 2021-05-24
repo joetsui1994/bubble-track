@@ -148,7 +148,7 @@ function App() {
     }, 3000);
   };
 
-  const handleAddGraph = (graphID, nodesLinks, graphInfo, graphParams, nodesFixed, calculateQ) => {
+  const handleAddGraph = (graphID, nodesLinks, graphInfo, graphParams, nodesFixed, calculateQ, invNodesNum) => {
     // calculate QScores if calculateQ is true
     var intersections = null,
       lenQ = null,
@@ -168,6 +168,7 @@ function App() {
       intersections: intersections,
       lenQ: lenQ,
       potentialQ: potentialQ,
+      invNodesNum: invNodesNum,
     };
     const newGraphsArray = graphs.concat([newGraph]);
     setGraphs(newGraphsArray);

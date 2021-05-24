@@ -63,7 +63,8 @@ class HNetwork extends Component {
         } else if (JSON.stringify(prevProps.params) !== JSON.stringify(this.props.params) || prevProps.checkExpLen !== this.props.checkExpLen) {
             if (prevProps.params.lambda !== this.props.params.lambda) {
                 const newLambda = this.props.params.lambda;
-                this.state.simulation.force("link", d3.forceLink().links(this.state.treeLinks).id(function(d) { return d.id; }).distance(function(d) { return d.len*newLambda }).strength(1));
+                this.state.simulation.force("link", d3.forceLink().links(this.state.treeLinks).id(function(d) { return d.id; }).distance(function(d) { return d.len*newLambda }));
+                this._simulationUpdate(this, this.state.transform);
             } else if (prevProps.params.minZoom !== this.props.params.minZoom || prevProps.params.maxZoom !== this.props.params.maxZoom) {
                 this.setState({
                     zoom: this.state.zoom.scaleExtent([this.props.params.minZoom, this.props.params.maxZoom]),
@@ -192,9 +193,9 @@ class HNetwork extends Component {
 
         var simulation = d3.forceSimulation()
             // .force("center", d3.forceCenter(compStat.width/2, compStat.height/2))
-            .force("charge", d3.forceManyBody().strength(function(d) { return d.type > 0 ? -params.charge : 1 }))
+            .force("charge", d3.forceManyBody().strength(function(d) { return d.type > 0 ? -params.charge : 0 }))
             .force("collide", d3.forceCollide().strength(0.9).radius(function(d, i) { return d.type > 0 ? radiusCalc(params.minR, params.maxR, params.gamma, d.num) : 0 }))
-            .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(function(d) { return d.len*params.lambda }).strength(1))
+            .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(function(d) { return d.len*params.lambda }))
             .alphaDecay(params.alphaDecay)
             .velocityDecay(params.velocityDecay)
             .alphaMin(params.minAlpha);
@@ -248,7 +249,9 @@ class HNetwork extends Component {
                             node.x = transform.applyX(node.x);
                             node.y = transform.applyY(node.y);
     
-                            return node
+                            console.log(node)
+
+                            return node;
                         }
                     }
                 }
@@ -289,24 +292,36 @@ class HNetwork extends Component {
                 compStat.props.handleReheat(false);
             }
 
-            compStat.state.treeLinks.forEach(function(d, i) {
-                const x1 = d.source.x,
-                    x2 = d.target.x,
-                    y1 = d.source.y,
-                    y2 = d.target.y;
-          
-                d.x = (x2 + x1)/2;
-                d.y = (y2 + y1)/2;
-            });
+            if (compStat.props.graph.invNodesNum) {
+                compStat.state.treeLinks.forEach(function(d, i) {
+                    const x1 = d.source.x,
+                        x2 = d.target.x,
+                        y1 = d.source.y,
+                        y2 = d.target.y;
+              
+                    d.x = (x2 + x1)/2;
+                    d.y = (y2 + y1)/2;
+                });
+            }
 
             this.force("charge", d3.forceManyBody().strength(chargeStrength))
-                .force("collide", d3.forceCollide().strength(0.9).radius(function(d, i) { return d.type > 0 ? radiusCalc(compStat.props.params.minR, compStat.props.params.maxR, compStat.props.params.gamma, d.num) : 0 }));
+                .force("collide", d3.forceCollide().strength(0.9).radius(function(d, i) { return d.type > 0 ? radiusCalc(compStat.props.params.minR, compStat.props.params.maxR, compStat.props.params.gamma, d.num) : compStat.props.params.nonNodeR }))
+                .force("link").iterations(1500).strength(1);
 
             return compStat._simulationUpdate(compStat, transform);
         }
 
         try {
-            simulation.nodes(compStat.state.treeNodes.concat(compStat.state.treeLinks))
+            // Add invisible nodes to links
+            var nodesToAdd = [];
+            if (compStat.props.graph.invNodesNum) {
+                const invNodes = compStat.state.treeLinks.map((link, i) => ({ ...link, id: `l${i}`, type: 1, num: 1 }));
+                nodesToAdd = compStat.state.treeNodes.concat(invNodes);
+            } else {
+                nodesToAdd = compStat.state.treeNodes;
+            }
+
+            simulation.nodes(compStat.state.treeNodes.concat(nodesToAdd))
                 .on("tick", ticked);
         } catch (error) {
             console.log(error);
@@ -336,9 +351,6 @@ class HNetwork extends Component {
     }
 
     render() {
-        // const { graph, isFrozen, isHeating, locateXYS, zoomGo, centreGo, checkExpLen, zoomXY, params } = this.props;
-        // const { handleReheat, handleSetCursorXYS, handleAlphaChange, handleGraphRenderError, setGraphLoading } = this.props;
-
         return (
             <div style={{ backgroundColor: "#292929", overflow: "hidden", position: 'absolute', top: 0, left: 0 }} id="snapshot" ref={this.viewRef}>
                 <div style={{ overflowY: "hidden", overflowX: "hidden", minHeight: 400, height: "100vh", width: "100vw" }}>

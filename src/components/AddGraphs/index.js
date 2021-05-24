@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 13,
         fontWeight: 500,
         marginBottom: 10,
-        // display: 'inline-block',
     },
     helperText: {
         marginTop: -5,
@@ -135,7 +134,17 @@ const useStyles = makeStyles((theme) => ({
         "&.Mui-focused": {
             color: '#054a5c'
         },
-    }
+    },
+    invNodesText: {
+        display: 'inline-block',
+        fontSize: 13,
+        fontWeight: 500,
+    },
+    invNodesInput: {
+        margin: 0,
+        marginLeft: 15,
+        width: 40,
+    },
 }));
 
 const DialogContent = withStyles((theme) => ({
@@ -170,7 +179,7 @@ export default function FormDialog(props) {
     const [newGraphID, setNewGraphID] = React.useState('');
     const [nodesFixed, setNodesFixed] = React.useState(false);
     const [calculateQ, setCalculateQ] = React.useState(true);
-    const [addInvNodes, setAddInvNodes] = React.useState(false);
+    const [invNodesNum, setInvNodesNum] = React.useState(0);
     const [waitingForFileUpload, setWaitingForFileUpload] = React.useState(false);
     const [helperMessage, setHelperMessage] = React.useState('N/A');
     const [helperMessageTimeout, setHelperMessageTimeout] = React.useState(null);
@@ -208,14 +217,26 @@ export default function FormDialog(props) {
 
     const handleNodesFixedChange = () => {
         setNodesFixed(!nodesFixed);
+        if (invNodesNum || invNodesNum === '') {
+            setInvNodesNum(0);
+        }
     }
 
     const handleCalculateQChange = () => {
         setCalculateQ(!calculateQ);
     }
 
-    const handleAddInvNodes = () => {
-        setAddInvNodes(!addInvNodes);
+    const handleInvNodesNumChange = (event) => {
+        if (event.target.value === '') {
+            setInvNodesNum('');
+        } else {
+            const newValue = parseInt(event.target.value),
+                valid = !isNaN(newValue) && newValue >= 0;
+        
+            if (valid) {
+                setInvNodesNum(newValue);
+            }
+        }
     }
 
     const handleAdd = () => {
@@ -228,7 +249,7 @@ export default function FormDialog(props) {
             time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
             const dateTime = `${date}_${time}`;
             const graphInfo = `${nodesLinksUpload.fileName}, ${dateTime}`;
-            handleAddGraph(newGraphID, nodesLinksUpload.content, graphInfo, _mergeUploadedParams(graphParamsUpload.content) ?? defaultParams, nodesFixed, nodesFixed && calculateQ);
+            handleAddGraph(newGraphID, nodesLinksUpload.content, graphInfo, _mergeUploadedParams(graphParamsUpload.content) ?? defaultParams, nodesFixed, nodesFixed && calculateQ, invNodesNum === '' ? false : invNodesNum);
             handleDialogClose();
         }
     };
@@ -334,6 +355,7 @@ export default function FormDialog(props) {
         }
 
         setNewGraphID(newID);
+        setInvNodesNum(0);
     }, [open, graphs]);
 
     return (
@@ -345,11 +367,10 @@ export default function FormDialog(props) {
                 </Typography>
                 <CustomTextField
                     label=""
-                    placeholder="untitled-graph-01"
                     fullWidth
                     margin="dense"
                     className={classes.graphIdInput}
-                    inputProps={{style: {
+                    inputProps={{ style: {
                         fontSize: 13,
                     }}}
                     InputLabelProps={{
@@ -368,7 +389,7 @@ export default function FormDialog(props) {
                     fullWidth
                     margin="dense"
                     className={classes.urlInput}
-                    inputProps={{style: {
+                    inputProps={{ style: {
                         fontSize: 13,
                     }}}
                     InputLabelProps={{
@@ -416,7 +437,7 @@ export default function FormDialog(props) {
                     fullWidth
                     margin="dense"
                     className={classes.urlInput}
-                    inputProps={{style: {
+                    inputProps={{ style: {
                         fontSize: 13,
                     }}}
                     InputLabelProps={{
@@ -481,20 +502,23 @@ export default function FormDialog(props) {
                     onChange={handleCalculateQChange}
                 />
                 <br />
-                <Typography className={classes.checkboxText}>
-                    Add invisible node(s) to links (<span style={{ fontStyle: 'italic' }}>experimental</span>):
+                <Typography className={classes.invNodesText}>
+                    Number of invisible node(s) per link:
                 </Typography>
-                <Checkbox
+                <CustomTextField
+                    label=""
+                    margin="dense"
                     disabled={nodesFixed}
-                    checked={!nodesFixed && addInvNodes}
-                    classes={{
-                        root: classes.checkbox,
-                        checked: classes.checked,
-                        disabled: classes.disabled,
+                    className={classes.invNodesInput}
+                    inputProps={{ style: {
+                        fontSize: 12,
+                    }}}
+                    InputLabelProps={{
+                        shrink: true,
                     }}
-                    onChange={handleAddInvNodes}
+                    onChange={(event) => handleInvNodesNumChange(event)}
+                    value={invNodesNum}
                 />
-                <br />
                 <Typography className={classes.subTitle} style={{ marginTop: 10 }}>
                     HELPER TEXT
                 </Typography>
