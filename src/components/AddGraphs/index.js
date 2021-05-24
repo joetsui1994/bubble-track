@@ -273,13 +273,8 @@ export default function FormDialog(props) {
         if (params === null) {
             return null;
         } else {
-            var paramsCopy = JSON.parse(JSON.stringify(params));
-            Object.entries(defaultParams).forEach(([key, value]) => {
-                if (!(key in paramsCopy)) {
-                    paramsCopy[key] = value;
-                }
-            });
-    
+            const mergedParams = { ...defaultParams, ...params };
+
             return paramsCopy;
         }
     };
