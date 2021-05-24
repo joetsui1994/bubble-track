@@ -3,13 +3,14 @@ import * as d3 from "d3";
 
 const linkColor = '#dedede';
 const nodeColor = '#dedede';
-const linkOpacity = 0.9;
-const linkWidth = 1.3;
+const linkOpacity = 0.95;
+const linkWidth = 1.5;
+const maxLinkWidth = 10;
 
 //Calculate node radius given constants (min and max radii), scaling parameter and node value
 //Exponential scaling with parameter gamma, R(x) = maxR - (maxR - minR) * exp(gamma * value)
 function radiusCalc(minR, maxR, gamma, value) {
-    return maxR - (maxR - minR)*Math.exp(-gamma*(value - 1))
+    return maxR - (maxR - minR)*Math.exp(-gamma*(value - 1));
 }
 
 class HNetwork extends Component {
@@ -59,7 +60,7 @@ class HNetwork extends Component {
             this.props.isFrozen ? this.state.simulation.stop() : this.state.simulation.restart();
         } else if (prevProps.isHeating !== this.props.isHeating && this.props.isHeating) {
             this.state.simulation.alpha(1).alphaDecay(this.props.params.alphaDecay).velocityDecay(this.props.params.velocityDecay).alphaTarget(0).restart();
-        } else if (JSON.stringify(prevProps.params) !== JSON.stringify(this.props.params)) {
+        } else if (JSON.stringify(prevProps.params) !== JSON.stringify(this.props.params) || prevProps.checkExpLen !== this.props.checkExpLen) {
             if (prevProps.params.lambda !== this.props.params.lambda) {
                 const newLambda = this.props.params.lambda;
                 this.state.simulation.force("link", d3.forceLink().links(this.state.treeLinks).id(function(d) { return d.id; }).distance(function(d) { return d.len*newLambda }).strength(1));
@@ -94,7 +95,7 @@ class HNetwork extends Component {
         var canvas = document.getElementById('canvas');
 
         var { treeNodes, treeLinks, width, height } = compStat.state;
-        var { params } = compStat.props;
+        var { params, checkExpLen } = compStat.props;
 
         if (canvas !== null) {
             var context = canvas.getContext("2d");
@@ -107,12 +108,26 @@ class HNetwork extends Component {
             context.scale(transform.k, transform.k);
         
             // Draw links
-            treeLinks.forEach(function(d) {
+            treeLinks.forEach(function(d, i) {
+                var newLinkColor = linkColor,
+                    newLinkWidth = linkWidth;
+                if (checkExpLen) {
+                    // ExpLen-Q
+                    const actLen = Math.sqrt((d.target.x - d.source.x)**2 + (d.target.y - d.source.y)**2)/params.lambda;
+                    const lenDiffFrac = Math.min(1, Math.abs(actLen - d.len)/d.len);
+
+                    // Colour code
+                    newLinkColor = `hsl(0, 100%, ${50*(2 - lenDiffFrac)}%)`;
+
+                    // Adjust link width
+                    newLinkWidth = linkWidth + lenDiffFrac*(maxLinkWidth - linkWidth);
+                }
+
                 context.beginPath();
                 context.moveTo(d.source.x, d.source.y);
                 context.lineTo(d.target.x, d.target.y);
-                context.strokeStyle = linkColor;
-                context.lineWidth = linkWidth;
+                context.strokeStyle = newLinkColor;
+                context.lineWidth = newLinkWidth;
                 context.globalAlpha = linkOpacity;
                 context.stroke();
             });
@@ -274,6 +289,16 @@ class HNetwork extends Component {
                 compStat.props.handleReheat(false);
             }
 
+            compStat.state.treeLinks.forEach(function(d, i) {
+                const x1 = d.source.x,
+                    x2 = d.target.x,
+                    y1 = d.source.y,
+                    y2 = d.target.y;
+          
+                d.x = (x2 + x1)/2;
+                d.y = (y2 + y1)/2;
+            });
+
             this.force("charge", d3.forceManyBody().strength(chargeStrength))
                 .force("collide", d3.forceCollide().strength(0.9).radius(function(d, i) { return d.type > 0 ? radiusCalc(compStat.props.params.minR, compStat.props.params.maxR, compStat.props.params.gamma, d.num) : 0 }));
 
@@ -281,7 +306,7 @@ class HNetwork extends Component {
         }
 
         try {
-            simulation.nodes(compStat.state.treeNodes)
+            simulation.nodes(compStat.state.treeNodes.concat(compStat.state.treeLinks))
                 .on("tick", ticked);
         } catch (error) {
             console.log(error);
@@ -311,8 +336,8 @@ class HNetwork extends Component {
     }
 
     render() {
-        const { graph, isFrozen, isHeating, locateXYS, zoomGo, centreGo, zoomXY, params } = this.props;
-        const { handleReheat, handleSetCursorXYS, handleAlphaChange, handleGraphRenderError, setGraphLoading } = this.props;
+        // const { graph, isFrozen, isHeating, locateXYS, zoomGo, centreGo, checkExpLen, zoomXY, params } = this.props;
+        // const { handleReheat, handleSetCursorXYS, handleAlphaChange, handleGraphRenderError, setGraphLoading } = this.props;
 
         return (
             <div style={{ backgroundColor: "#292929", overflow: "hidden", position: 'absolute', top: 0, left: 0 }} id="snapshot" ref={this.viewRef}>
