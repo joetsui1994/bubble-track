@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -13,6 +13,7 @@ import TuneIcon from '@material-ui/icons/Tune';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import GamepadIcon from '@material-ui/icons/Gamepad';
 import BlurCircularIcon from '@material-ui/icons/BlurCircular';
+import TimelineIcon from '@material-ui/icons/Timeline';
 import { saveAs } from 'file-saver';
 import clsx from 'clsx';
 import custom_theme from './theme';
@@ -115,6 +116,7 @@ function App() {
   const [alpha, setAlpha] = React.useState(1);
   const [locateXYS, setLocateXYS] = React.useState(false);
   const [cursorXYS, setCursorXYS] = React.useState({ x: null, y: null });
+  const [checkExpLen, setCheckExpLen] = React.useState(false);
   const [centreGo, setCentreGo] = React.useState(false);
   const [zoomGo, setZoomGo] = React.useState(false);
   const [zoomXY, setZoomXY] = React.useState(null);
@@ -254,6 +256,10 @@ function App() {
     setCentreGo(!centreGo);
   };
 
+  const handleCheckExpLen = () => {
+    setCheckExpLen(!checkExpLen);
+  };
+
   const handleZoomGo = () => {
     setZoomGo(!zoomGo);
   };
@@ -359,6 +365,16 @@ function App() {
             <IconButton
               disabled={currGraph === null}
               edge="end"
+              color={checkExpLen ? '#484848' : "inherit"}
+              aria-label="check ExpLen"
+              onClick={handleCheckExpLen}
+              className={classes.actionButton}
+            >
+              <TimelineIcon fontSize='small' />
+            </IconButton>
+            <IconButton
+              disabled={currGraph === null}
+              edge="end"
               color="inherit"
               aria-label="freeze graph"
               onClick={handleFreeze}
@@ -414,6 +430,7 @@ function App() {
               handleSetCursorXYS={handleSetCursorXYS}
               zoomGo={zoomGo}
               centreGo={centreGo}
+              checkExpLen={checkExpLen}
               zoomXY={zoomXY}
               handleAlphaChange={handleAlphaChange}
               params={currParams}
