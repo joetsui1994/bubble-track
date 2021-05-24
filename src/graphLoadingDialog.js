@@ -19,8 +19,20 @@ const useStyles = makeStyles((theme) => ({
     progressBar: {
         marginTop: 10,
         marginBottom: 5,
+        backgroundColor: 'red'
     }
 }));
+
+const CustomLinearProgress = withStyles((theme) => ({
+    colorPrimary: {
+      backgroundColor: '#a8a8a8',
+    },
+    bar: {
+      borderRadius: 5,
+      backgroundColor: '#054a5c',
+    },
+}))(LinearProgress);
+  
 
 const DialogContent = withStyles((theme) => ({
     root: {
@@ -55,7 +67,7 @@ export default function GraphLoadingDialog(props) {
                         <Typography className={classes.text}>
                             Please wait, it should only take a few seconds...
                         </Typography>
-                        <LinearProgress className={classes.progressBar} />
+                        <CustomLinearProgress className={classes.progressBar} />
                     </Fragment>
                     :
                     <Typography className={classes.text}>
