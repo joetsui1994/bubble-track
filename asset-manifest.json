@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/bubble-track/static/css/main.264a7cb0.chunk.css",
-    "main.js": "/bubble-track/static/js/main.070803dc.chunk.js",
-    "main.js.map": "/bubble-track/static/js/main.070803dc.chunk.js.map",
+    "main.js": "/bubble-track/static/js/main.26c33512.chunk.js",
+    "main.js.map": "/bubble-track/static/js/main.26c33512.chunk.js.map",
     "runtime-main.js": "/bubble-track/static/js/runtime-main.533b3e23.js",
     "runtime-main.js.map": "/bubble-track/static/js/runtime-main.533b3e23.js.map",
-    "static/js/2.4c299776.chunk.js": "/bubble-track/static/js/2.4c299776.chunk.js",
-    "static/js/2.4c299776.chunk.js.map": "/bubble-track/static/js/2.4c299776.chunk.js.map",
+    "static/js/2.a18d1ddd.chunk.js": "/bubble-track/static/js/2.a18d1ddd.chunk.js",
+    "static/js/2.a18d1ddd.chunk.js.map": "/bubble-track/static/js/2.a18d1ddd.chunk.js.map",
     "static/js/3.f9fddc5d.chunk.js": "/bubble-track/static/js/3.f9fddc5d.chunk.js",
     "static/js/3.f9fddc5d.chunk.js.map": "/bubble-track/static/js/3.f9fddc5d.chunk.js.map",
     "index.html": "/bubble-track/index.html",
     "static/css/main.264a7cb0.chunk.css.map": "/bubble-track/static/css/main.264a7cb0.chunk.css.map",
-    "static/js/2.4c299776.chunk.js.LICENSE.txt": "/bubble-track/static/js/2.4c299776.chunk.js.LICENSE.txt",
+    "static/js/2.a18d1ddd.chunk.js.LICENSE.txt": "/bubble-track/static/js/2.a18d1ddd.chunk.js.LICENSE.txt",
     "static/media/App.css": "/bubble-track/static/media/PT Root UI_Regular.5cbbba71.otf"
   },
   "entrypoints": [
     "static/js/runtime-main.533b3e23.js",
-    "static/js/2.4c299776.chunk.js",
+    "static/js/2.a18d1ddd.chunk.js",
     "static/css/main.264a7cb0.chunk.css",
-    "static/js/main.070803dc.chunk.js"
+    "static/js/main.26c33512.chunk.js"
   ]
 }
