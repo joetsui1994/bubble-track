@@ -142,7 +142,7 @@ class HNetwork extends Component {
                 var beginAngle = 0,
                 endAngle = 2*Math.PI;
 
-                var nodeRadius = d.type > 0 ? radiusCalc(params.minR, params.maxR, params.gamma, d.num) : params.nonNodeR;
+                var nodeRadius = d.num > 0 ? radiusCalc(params.minR, params.maxR, params.gamma, d.num) : params.nonNodeR;
                 context.globalAlpha = 0.8;
 
                 context.beginPath();
@@ -193,8 +193,8 @@ class HNetwork extends Component {
 
         var simulation = d3.forceSimulation()
             // .force("center", d3.forceCenter(compStat.width/2, compStat.height/2))
-            .force("charge", d3.forceManyBody().strength(function(d) { return d.type > 0 ? -params.charge : 0 }))
-            .force("collide", d3.forceCollide().strength(0.9).radius(function(d, i) { return d.type > 0 ? radiusCalc(params.minR, params.maxR, params.gamma, d.num) : 0 }))
+            .force("charge", d3.forceManyBody().strength(function(d) { return d.num > 0 ? -params.charge : 0 }))
+            .force("collide", d3.forceCollide().strength(0.9).radius(function(d, i) { return d.num > 0 ? radiusCalc(params.minR, params.maxR, params.gamma, d.num) : 0 }))
             .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(function(d) { return d.len*params.lambda }))
             .alphaDecay(params.alphaDecay)
             .velocityDecay(params.velocityDecay)
@@ -305,8 +305,8 @@ class HNetwork extends Component {
             }
 
             this.force("charge", d3.forceManyBody().strength(chargeStrength))
-                .force("collide", d3.forceCollide().strength(0.9).radius(function(d, i) { return d.type > 0 ? radiusCalc(compStat.props.params.minR, compStat.props.params.maxR, compStat.props.params.gamma, d.num) : compStat.props.params.nonNodeR }))
-                .force("link").iterations(1500).strength(1);
+                .force("collide", d3.forceCollide().strength(0.9).radius(function(d, i) { return d.num > 0 ? radiusCalc(compStat.props.params.minR, compStat.props.params.maxR, compStat.props.params.gamma, d.num) : compStat.props.params.nonNodeR }))
+                .force("link").iterations(100).strength(1);
 
             return compStat._simulationUpdate(compStat, transform);
         }
@@ -315,7 +315,7 @@ class HNetwork extends Component {
             // Add invisible nodes to links
             var nodesToAdd = [];
             if (compStat.props.graph.invNodesNum) {
-                const invNodes = compStat.state.treeLinks.map((link, i) => ({ ...link, id: `l${i}`, type: 1, num: 1 }));
+                const invNodes = compStat.state.treeLinks.map((link, i) => ({ ...link, id: `l${i}`, num: 1 }));
                 nodesToAdd = compStat.state.treeNodes.concat(invNodes);
             } else {
                 nodesToAdd = compStat.state.treeNodes;
