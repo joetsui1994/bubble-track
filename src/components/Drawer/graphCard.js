@@ -6,6 +6,7 @@ import SpeedIcon from '@material-ui/icons/Speed';
 import ReplayIcon from '@material-ui/icons/Replay';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
@@ -115,6 +116,19 @@ function GraphCard(props) {
             setIntersectionCount(intersectionCount - 1);
         }
     };
+    const handleGoToIntersection = () => {
+        if (graph.intersections !== null) {
+            handleZoomXY(null);
+            setTimeout(function() {
+                handleZoomXY(graph.intersections[intersectionCount]);
+            }, 10);  // setTimeout to allow zoomXY to be first set to null
+        }
+    };
+
+    const _calculateQ = (graph) => {
+        setIntersectionCount(0);
+        handleCalculateQ(graph);
+    };
 
     useEffect(() => {
         setIntersectionCount(0);
@@ -131,7 +145,7 @@ function GraphCard(props) {
                     disabled={!active}
                     color="inherit"
                     className={classes.actionButton}
-                    onClick={() => handleCalculateQ(graph)}
+                    onClick={() => _calculateQ(graph)}
                 >
                     <SpeedIcon fontSize='small' />
                 </IconButton>
@@ -168,7 +182,7 @@ function GraphCard(props) {
                 null
                 :
                 <Fragment>
-                    {score_bar(Math.min((graph.intersections.length/(graph.nodesLinks.links.length/intersectionQ_scale)), 1), 140, 6, classes.scoreBar, true)}
+                    {score_bar(Math.min((graph.intersections.length/(graph.nodesLinks.links.length/intersectionQ_scale)), 1), 120, 6, classes.scoreBar, true)}
                     <Typography className={classes.text}>
                         &nbsp;&nbsp;(INTERSECT-Q)
                     </Typography>
@@ -190,6 +204,15 @@ function GraphCard(props) {
                     >
                         <ArrowRightIcon fontSize="inherit" />
                     </IconButton>
+                    <IconButton
+                        disabled={!active || !graph.intersections.length}
+                        aria-label="go to intersection"
+                        className={classes.intersectionArrows}
+                        size="small"
+                        onClick={handleGoToIntersection}
+                    >
+                        <RadioButtonCheckedIcon style={{ fontSize: 12 }} />
+                    </IconButton>
                     <Typography className={classes.subText}>
                         SCORE_BAR IS SCALED RELATIVE TO EDGE_NUM/{intersectionQ_scale}
                     </Typography>
@@ -203,7 +226,7 @@ function GraphCard(props) {
                 null
                 :
                 <Fragment>
-                    {score_bar(Math.min(graph.lenQ.lenDiffFrac % 1, 1), 140, 6, classes.scoreBar, true)}
+                    {score_bar(Math.min(graph.lenQ.lenDiffFrac % 1, 1), 120, 6, classes.scoreBar, true)}
                     <Typography className={classes.text}>
                         &nbsp;&nbsp;({Math.round(graph.lenQ.lenDiffFrac*10000)*100/10000}% of ExpLen)
                     </Typography>
